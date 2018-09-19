@@ -1,0 +1,38 @@
+<view class="page-wrap">
+    <scroll-view class="chat-container" scroll-y scroll-into-view="{{lastMessageId}}" scroll-top="9999999999">
+        <view wx:for="{{messages}}" wx:for-item="message" wx:key="id" id="{{message.id}}" class="message {{message.type}}">
+            <view wx:if="{{message.type == 'speak'}}" class="user-message {{message.isMe ? 'me' : 'other'}}">
+                <image class="avatar" src="{{message.user.avatarUrl}}" mode="aspectFill"></image>
+                <view class="text">
+                    <view class="nickname">{{message.user.nickName}}</view>
+                    <view class="content">{{message.content}}</view>
+                </view>
+            </view>
+            <view wx:if="{{message.type == 'system'}}" class="system-message">
+                {{message.content}}
+            </view>
+        </view>
+    </scroll-view>
+    <view class="input-panel btn-area">
+        <block wx:if="{{!isPlayer}}">
+          <block wx:if="{{!isStart}}">
+            <button type="primary" class="send-btn" style="margin-right:2px" bindtap='startGame'>开始比赛</button>
+          </block> 
+          <block wx:else>
+            <block wx:if="{{!isStartQiang}}"><!--可以抢的时候,按钮不可见-->
+              <button type="primary" class="send-btn" bindtap='startQiang'>开始抢答</button>
+            </block>
+            <block wx:else>
+              <button type="primary" class="send-btn" disabled='true'>开始抢答</button>
+            </block>
+          </block>
+          <button type="warn" class="send-btn" style="margin-left:2px" bindtap='endGame'>结束比赛</button>
+        </block>
+        <block wx:elif="{{isQiang}}"><!--可以抢的时候,按钮为可见-->
+          <button type="primary" class="send-btn" bindtap='qiang'>抢答</button>
+        </block>
+        <block wx:else>
+          <button type="primary" class="send-btn" disabled='true'>抢答</button>
+        </block>
+    </view>
+</view>

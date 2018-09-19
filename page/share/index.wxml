@@ -1,0 +1,20 @@
+<view class="page-wrap">
+  <view class="index-hd">
+    <view class="index-desc">----点击比赛名称进入抢答比赛----</view>
+  </view>
+  <view class="index-bd">
+    <view class="kind-list">
+      <view class="kind-list-item">
+        <view id="qiangda" class="kind-list-item-hd" bindtap="goToRoom">
+          <view class="kind-list-text">{{roomName}}</view>
+          <image class="kind-list-img" src="/image/media.png"></image>
+          <!--view class="kind-list-img">{{playerNum}}人</view-->
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="btn-area" id="buttonContainer">
+    <button type="primary" open-type="share">发出比赛邀请</button>
+    <!--button type="warn" >结束比赛</button-->
+  </view>
+</view>

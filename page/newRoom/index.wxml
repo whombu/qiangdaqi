@@ -1,0 +1,71 @@
+<form bindsubmit="formSubmit" bindreset="formReset">
+  <view class="page-wrap">
+    <view class="chat-container">
+      <view class="page-section">
+        <view class="weui-cells__title">比赛名称</view>
+        <view class="weui-cells weui-cells_after-title">
+          <view class="weui-cell weui-cell_input">
+            <input name="roomName" class="weui-input" auto-focus maxlength="30" placeholder="输入比赛名称" required/>
+          </view>
+        </view>
+      </view>
+      <!--
+      <view class="page-section">
+        <view class="weui-cells__title">比赛人数</view>
+        <view class="weui-cells weui-cells_after-title">
+          <view class="weui-cell weui-cell_input">
+            <input name="playerNum" class="weui-input" type="number" maxlength="2" placeholder="输入允许的最多参赛人数"/>
+          </view>
+        </view>
+      </view>
+      -->
+      <!--
+      <view class="page-section">
+        <view class="weui-cells__title">房间校验码</view>
+        <view class="weui-cells weui-cells_after-title">
+          <view class="weui-cell weui-cell_input">
+            <input name="validNo" class="weui-input" type="number" maxlength="3" placeholder="输入3位的数字校验码（可选）"/>
+          </view>
+        </view>
+      </view>-->
+    </view>
+
+    <view class="input-panel">
+        <button formType="submit" type="primary" class="send-btn">发起新的抢答比赛</button>
+    </view>
+  </view>
+</form>
+<!--view class="container">
+
+  <view class="page-body">
+    <view class="page-section">
+      <view class="weui-cells__title">比赛名称</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input">
+          <input class="weui-input" auto-focus maxlength="30" placeholder="输入比赛名称"/>
+        </view>
+      </view>
+    </view>
+     <view class="page-section">
+      <view class="weui-cells__title">比赛人数</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input">
+          <input class="weui-input" type="number" maxlength="2" placeholder="输入比赛人数"/>
+        </view>
+      </view>
+    </view>
+     <view class="page-section">
+      <view class="weui-cells__title">房间校验码</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input">
+          <input class="weui-input" type="number" maxlength="3" placeholder="输入3位的数字校验码"/>
+        </view>
+      </view>
+    </view>
+     <view class="btn-area" id="buttonContainer">
+      <navigator url="../qdRoom/index" hover-class="navigator-hover">
+        <button type="primary">发起新的抢答比赛</button>
+      </navigator>
+    </view>
+  </view>
+</view-->

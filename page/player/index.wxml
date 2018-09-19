@@ -1,0 +1,28 @@
+<view class="page-wrap">
+  <view class="chat-container">
+    <view class="page-section">
+      <view class="weui-cells__title">你的名称</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input">
+          <input class="weui-input" maxlength="30" placeholder="输入大家可以知道你的名称"/>
+        </view>
+      </view>
+    </view>
+    <!--
+     <view class="page-section">
+      <view class="weui-cells__title">房间校验码</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input">
+          <input class="weui-input" type="number" maxlength="3" placeholder="输入3位的数字校验码"/>
+        </view>
+      </view>
+    </view>
+    -->
+  </view>
+
+  <view class="input-panel">
+    <!--navigator url="../newRoom/index?title=新建抢答比赛" hover-class="navigator-hover"-->
+      <button type="primary" class="send-btn" bindtap='doNext'>加入抢答比赛</button>
+    <!--/navigator-->
+  </view>
+</view>

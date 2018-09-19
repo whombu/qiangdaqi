@@ -1,0 +1,16 @@
+<view class="page-wrap">
+  <view class="chat-container">
+    <view class="system-message">点击按钮，发起一场抢答比赛。</view>
+  </view>
+
+  <view class="input-panel">
+    <!--navigator url="../newRoom/index?title=新建抢答比赛" hover-class="navigator-hover"-->
+    <block wx:if="{{btnIsCanUse==true}}">
+      <button type="primary" class="send-btn" bindtap='doNext'>发起新的抢答比赛</button>
+    </block>
+    <block wx:else>
+      <button type="primary" disabled="true" class="send-btn">发起新的抢答比赛</button>
+    </block>
+    <!--/navigator-->
+  </view>
+</view>
