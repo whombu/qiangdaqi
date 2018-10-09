@@ -6,6 +6,8 @@
 // 引入 QCloud 小程序增强 SDK
 var qcloud = require('../../vendor/qcloud-weapp-client-sdk/index');
 
+var util = require('../../util/util');
+
 // 引入配置
 var config = require('../../config');
 
@@ -43,13 +45,14 @@ Page({
     messages: [],
     inputContent: '大家好啊',
     lastMessageId: 'none',
-    isPlayer: false,//true为普通参赛队员,false为裁判.他们看到的按钮不同,
+    isPlayer: true,//true为普通参赛队员,false为裁判.他们看到的按钮不同,
     isStart: false, //比赛是否开始,true为已开始,false为未开始,
     roomId: null,
     roomName: null,
     refereeOpenId: null,
     isQiang: false,
-    isStartQiang: false
+    isStartQiang: false,
+    isDisable: true
   },
   startQiang(){
     // 信道当前不可用
@@ -71,6 +74,24 @@ Page({
     });
     
   },
+  pauseQiang() {
+    // 信道当前不可用
+    if (!this.tunnel || !this.tunnel.isActive()) {
+      this.pushMessage(createSystemMessage('您还没有加入抢答比赛，请稍后重试'));
+      if (this.tunnel.isClosed()) {
+        this.enter();
+      }
+      return;
+    }
+    setTimeout(() => {
+      if (this.tunnel) {
+        this.tunnel.emit('pause', { word: 'pause' });
+        this.setData({
+          isStartQiang: false
+        });
+      }
+    });
+  },
   startGame() {
     // 信道当前不可用
     if (!this.tunnel || !this.tunnel.isActive()) {
@@ -88,6 +109,7 @@ Page({
     });
   },
   endGame() {
+    var that = this;
     // 信道当前不可用
     if (!this.tunnel || !this.tunnel.isActive()) {
       this.pushMessage(createSystemMessage('您还没有加入抢答比赛，请稍后重试'));
@@ -96,10 +118,18 @@ Page({
       }
       return;
     }
-
-    setTimeout(() => {
-      if (this.tunnel) {
-        this.tunnel.emit('endGame', { word: 'endGame' });
+    wx.showModal({
+      content: "确定要结束比赛吗?",
+      confirmText: "确定",
+      cancelText: "取消",
+      success: function (e) {
+        if(!e.cancel){
+          setTimeout(() => {
+            if (that.tunnel) {
+              that.tunnel.emit('endGame', { word: 'endGame' });
+            }
+          });
+        }
       }
     });
   },
@@ -124,43 +154,66 @@ Page({
   onLoad(options){
     var me = this;
     var roomId = options.roomId;
-    console.log(roomId);
-    qcloud.request({
-      url: config.getQdRoomByRoomIdUrl + "?roomId=" + roomId,
-      success: function (qdRoomVal) {
-        var refereeOpenId = qdRoomVal.data.data.refereeOpenId;
-        me.setData({
-          roomId: roomId,
-          roomName: qdRoomVal.data.data.roomName,
-          isStart: qdRoomVal.data.data.isStart,
-          refereeOpenId: refereeOpenId
-        });
-        wx.setNavigationBarTitle({ title: qdRoomVal.data.data.roomName });
-        qcloud.request({
-          url: config.requestUserUrl,
-          success: function (userVal) {
-            if (refereeOpenId == userVal.data.data.userInfo.openId){
-              me.setData({
-                isPlayer: false
-              });
-            }else{
-              me.setData({
-                isPlayer: true
-              });
-            }
-          }
-        });
-      }
+    me.setData({
+      roomId: roomId
     });
+    var isPlayer = true;
+    if (!this.me) {
+      qcloud.request({
+        url: config.requestUserUrl,
+        login: true,
+        success: (response) => {
+          this.me = response.data.data.userInfo;
+          isPlayer = this.me.openId == me.data.roomId ? false : true;
+          this.setData({
+            isPlayer: isPlayer
+          });
+          qcloud.request({
+            url: config.getQdRoomByRoomIdUrl + "?roomId=" + roomId,
+            login: true,
+            success: function (qdRoomVal) {
+              var refereeOpenId = qdRoomVal.data.data.refereeOpenId;
+              me.setData({
+                roomName: qdRoomVal.data.data.roomName,
+                isStart: qdRoomVal.data.data.isStart,
+                refereeOpenId: refereeOpenId
+              });
+              wx.setNavigationBarTitle({ title: qdRoomVal.data.data.roomName });
+            }
+          });
+        }
+      });
+    }else{
+      isPlayer = this.me.openId == me.data.roomId ? false : true;
+      this.setData({
+        isPlayer: isPlayer
+      });
+      qcloud.request({
+        url: config.getQdRoomByRoomIdUrl + "?roomId=" + roomId,
+        login: true,
+        success: function (qdRoomVal) {
+          var refereeOpenId = qdRoomVal.data.data.refereeOpenId;
+          me.setData({
+            roomName: qdRoomVal.data.data.roomName,
+            isStart: qdRoomVal.data.data.isStart,
+            refereeOpenId: refereeOpenId
+          });
+          wx.setNavigationBarTitle({ title: qdRoomVal.data.data.roomName });
+        }
+      });
+    }
+    
     
   },
   /**
    * 页面渲染完成后，启动聊天室
    * */
   onReady() {
+    var me = this;
     if (!this.pageReady) {
       this.pageReady = true;
       this.enter();
+      
     }
   },
 
@@ -217,26 +270,28 @@ Page({
 
     // 创建信道
     var tunnel = this.tunnel = new qcloud.Tunnel(config.qdTunnelUrl + "?roomId=" + that.data.roomId);
-    //var tunnel = this.tunnel = new qcloud.Tunnel(config.tunnelUrl);
-    //var tunnel = this.tunnel = new qcloud.Tunnel(config.qdTunnelUrl);	
     // 连接成功后，去掉「正在加入群聊」的系统提示
-    tunnel.on('connect', () => this.popMessage());
+    tunnel.on('connect', () => {
+      this.popMessage();
+      that.setData({
+        isDisable: false
+      });
+    });
 
     // 聊天室有人加入或退出，反馈到 UI 上
     tunnel.on('people', people => {
       const { total, enter, leave } = people;
 
       if (enter) {
-        console.log(enter.openId, that.data.refereeOpenId);
         if (enter.openId == that.data.refereeOpenId){
-          this.amendMessage(createSystemMessage(`${enter.nickName}(裁判)已加入比赛`));
+          this.pushMessage(createSystemMessage(`${enter.nickName}(裁判)已加入比赛，当前共 ${total} 人`));
         }else
-          this.amendMessage(createSystemMessage(`${enter.nickName}(队员)已加入比赛，当前共 ${total} 人参赛`));
+          this.pushMessage(createSystemMessage(`${enter.nickName}(队员)已加入比赛，当前共 ${total} 人`));
       } else {
         if (leave.openId == that.data.refereeOpenId)
-          this.amendMessage(createSystemMessage(`${leave.nickName}(裁判)已退出比赛`));
+          this.pushMessage(createSystemMessage(`${leave.nickName}(裁判)已退出比赛，当前共 ${total} 人`));
         else
-          this.amendMessage(createSystemMessage(`${leave.nickName}(队员)已退出比赛，当前共 ${total} 人参赛`));
+          this.pushMessage(createSystemMessage(`${leave.nickName}(队员)已退出比赛，当前共 ${total} 人`));
       }
     });
 
@@ -247,20 +302,48 @@ Page({
         this.setData({
           isStart: true
         });
-        this.amendMessage(createSystemMessage("比赛开始"));
+        //this.amendFirstMessage(createSystemMessage("比赛开始"));
+        this.pushMessage(createUserMessage("比赛开始", who, who.false));
       }else if(word == "endGame"){
-
+        this.setData({
+          isStart: false
+        });
+        wx.showModal({
+          content: "裁判已经结束比赛,即将跳转至首页。",
+          confirmText: "确定",
+          showCancel: false,
+          success: function (e) {
+            that.quit();
+            if(that.data.isPlayer){
+              wx.redirectTo({
+                url: '/page/index/index',
+              });
+            }else{
+              wx.navigateBack({
+                delta: 2
+              });
+            }
+          }
+        });
       }else if(word == "begin"){
         this.setData({
           isQiang: true
         });
-        this.amendMessage(createSystemMessage("开始抢答"));
+        //this.amendFirstMessage(createSystemMessage("抢答开始"));
+        this.pushMessage(createUserMessage("抢答开始", who, false));
+      } else if (word == "pause") {
+        this.setData({
+          isQiang: false
+        });
+        //this.amendFirstMessage(createSystemMessage("抢答暂停"));
+        this.pushMessage(createUserMessage("抢答暂停", who, false));
       }else if(word == "qiang"){
         this.setData({
           isStartQiang: false,
           isQiang: false
         });
-        this.amendMessage(createSystemMessage("抢答结束," + who.nickName + "抢答成功"));
+        //this.amendFirstMessage(createSystemMessage("抢答结束,【" + who.nickName + "】抢答成功"));
+        this.pushMessage(createUserMessage("我抢到啦！！！", who, false));
       }
     });
     // 信道关闭后，显示退出群聊

@@ -89,7 +89,7 @@ Page({
         // 如果登录过，会记录当前用户在 this.me 上
         if (!this.me) {
             qcloud.request({
-                url: `https://${config.service.host}/user`,
+                url: config.requestUrl,
                 login: true,
                 success: (response) => {
                     this.me = response.data.data.userInfo;
@@ -108,7 +108,7 @@ Page({
         this.amendMessage(createSystemMessage('正在加入群聊...'));
 
         // 创建信道
-        var tunnel = this.tunnel = new qcloud.Tunnel(config.service.tunnelUrl);
+        var tunnel = this.tunnel = new qcloud.Tunnel(config.tunnelUrl);
 
         // 连接成功后，去掉「正在加入群聊」的系统提示
         tunnel.on('connect', () => this.popMessage());

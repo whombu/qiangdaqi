@@ -36,7 +36,7 @@ var getWxLoginResult = function getLoginCode(callback) {
                 },
 
                 fail: function (userError) {
-                  if (userError.errMsg == "getUserInfo:fail:auth deny" || userError.errMsg == "getUserInfo:fail scope unauthorized"){
+                  if (userError.errMsg == "getUserInfo:fail:auth deny" || userError.errMsg == "getUserInfo:fail:scope unauthorized" || userError.errMsg == "getUserInfo:fail scope unauthorized" || userError.errMsg == "getUserInfo:fail auth deny" ){
                     wx.navigateTo({
                       url : '/vendor/qcloud-weapp-client-sdk/authorize/index'
                     });

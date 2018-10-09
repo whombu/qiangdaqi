@@ -25,6 +25,8 @@ var config = {
 
     getQdRoomByRoomIdUrl: `https://${host}/getQdRoomByRoomId`,
 
+    judgeUserIsNotInQdRoomUrl: `https://${host}/judgeUserIsNotInQdRoom`,
+
     startQdGame: `https://${host}/startQdGame`,
 
     // 用code换取openId

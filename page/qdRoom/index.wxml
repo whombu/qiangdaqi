@@ -16,17 +16,17 @@
     <view class="input-panel btn-area">
         <block wx:if="{{!isPlayer}}">
           <block wx:if="{{!isStart}}">
-            <button type="primary" class="send-btn" style="margin-right:2px" bindtap='startGame'>开始比赛</button>
+            <button type="primary" class="send-btn" style="margin-right:2px" bindtap='startGame' disabled='{{isDisable}}'>开始比赛</button>
           </block> 
           <block wx:else>
             <block wx:if="{{!isStartQiang}}"><!--可以抢的时候,按钮不可见-->
               <button type="primary" class="send-btn" bindtap='startQiang'>开始抢答</button>
             </block>
             <block wx:else>
-              <button type="primary" class="send-btn" disabled='true'>开始抢答</button>
+              <button type="primary" class="send-btn" bindtap='pauseQiang'>暂停</button>
             </block>
           </block>
-          <button type="warn" class="send-btn" style="margin-left:2px" bindtap='endGame'>结束比赛</button>
+          <button type="warn" class="send-btn" style="margin-left:2px" bindtap='endGame' disabled='{{isDisable}}'>结束比赛</button>
         </block>
         <block wx:elif="{{isQiang}}"><!--可以抢的时候,按钮为可见-->
           <button type="primary" class="send-btn" bindtap='qiang'>抢答</button>

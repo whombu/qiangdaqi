@@ -155,6 +155,7 @@ function Tunnel(serviceUrl) {
             //login: true,
             success: function (response) {
                 if (+response.statusCode === 200 && response.data && response.data.url) {
+                    console.log("wss url:" + response.data.url)
                     openSocket(me.socketUrl = response.data.url);
                 } else {
                     dispatchConnectServiceError(response);

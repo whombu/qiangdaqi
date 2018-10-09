@@ -24,12 +24,14 @@ Page({
         //playerNum: playerNum,
         //validNo: validNo
       },
-      success : function(){
+      success : function(val){
+        console.log(val);
         wx.redirectTo({
           url: '../share/index',
         });
       },
       fail: function(error){
+        console.log(error);
         util.showModel("错误","创建比赛房间失败,请重试...");
       }
     });

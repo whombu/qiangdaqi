@@ -10,7 +10,6 @@ Page({
       method: 'get',
       login: true,
       success: function (val) {
-        console.log(val);
         me.setData({
           roomName:val.data.data.roomName,
           roomId: val.data.data.roomId
@@ -23,14 +22,15 @@ Page({
     });
   },
   data: {
-    roomName : "测试抢答比赛",
+    roomName : "抢答比赛",
     playerNum : 10,
     roomId : null
   },
   goToRoom : function(){
     var me = this;
-    wx.redirectTo({
-      url: '/page/qdRoom/index?roomId=' + me.data.roomId,
+    wx.navigateTo({
+      url: '/page/qdRoom/index?roomId=' + me.data.roomId + '&isPlayer=false'
+      //url: '/page/chat/chat'
     });
   },
   onShareAppMessage: function (ops) {
@@ -40,8 +40,8 @@ Page({
       console.log(ops.target)
     }
     return {
-      title: wx.getStorageSync('userInfo').nickName + '邀请你加入一场抢答比赛',
-      path: '/page/qdRoom/index?roomId=' + me.data.roomId,
+      title: qcloud.getSession().userInfo.nickName + '邀请你加入一场抢答比赛',
+      path: '/page/qdRoom/index?roomId=' + me.data.roomId + '&isPlayer=true',
       imageUrl : '/images/qiang.jpg',
       success: function (res) {
         // 转发成功 
