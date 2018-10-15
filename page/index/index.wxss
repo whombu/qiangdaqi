@@ -1,5 +1,8 @@
 @import "../common/index.wxss";
-
+ad {
+    margin: 0 auto;
+    zoom: 80%;
+}
 .page-wrap {
     display: flex;
     flex-direction: column;
