@@ -1,19 +1,16 @@
 <view class="page-wrap">
-  <view class="chat-container">
-    <view class="system-message" style="margin-top:50rpx">反馈邮箱：buxiaoliang@126.com</view>
-    <view class="system-message" style="margin-top:50rpx;">点击最下面的绿色按钮，发起一场抢答比赛。</view>
-    <ad unit-id="adunit-97683dbc0748ebbc" style="margin-top:100rpx;margin-bottom:50rpx"></ad>
+  <view class="index-hd">
+    <view class="index-desc">反馈邮箱：buxiaoliang@126.com</view>
+    <view class="index-desc">快点击绿色按钮，发起一场抢答比赛吧！！！</view>
   </view>
-
-  <view class="input-panel">
-    <!--navigator url="../newRoom/index?title=新建抢答比赛" hover-class="navigator-hover"-->
-    <block wx:if="{{btnIsCanUse==true}}">
-      <button type="primary" class="send-btn" style="margin-right:2px" bindtap='doNext'>发起抢答比赛</button>
+  <view class="btn-area" id="buttonContainer">
+   <block wx:if="{{btnIsCanUse==true}}">
+      <button type="primary" class="send-btn" bindtap='doNext'>发起抢答比赛</button>
     </block>
     <block wx:else>
-      <button type="primary" disabled="true" style="margin-right:2px" class="send-btn">发起抢答比赛</button>
+      <button type="primary" disabled="true" class="send-btn">发起抢答比赛</button>
     </block>
-    <button type="default" class="send-btn" style="margin-left:2px" open-type="share">分享给朋友</button>
-    <!--/navigator-->
+    <button type="default" class="send-btn" open-type="share">分享给朋友</button>
   </view>
+  <ad unit-id="adunit-97683dbc0748ebbc" style="margin-top:20rpx"></ad>
 </view>

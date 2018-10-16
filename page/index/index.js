@@ -59,7 +59,7 @@ Page({
       console.log(ops.target)
     }
     return {
-      title: qcloud.getSession().userInfo.nickName + '邀请你玩抢答比赛小程序',
+      title: '推荐抢答助手给你，来试试',
       path: '/page/index/index',
       imageUrl: '/images/qiang.jpg',
       success: function (res) {

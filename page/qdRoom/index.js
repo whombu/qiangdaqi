@@ -133,6 +133,22 @@ Page({
       }
     });
   },
+  quitGame(){
+    var that = this;
+    wx.showModal({
+      content: "是否现在要退出比赛？",
+      confirmText: "确定",
+      showCancel: true,
+      success: function (e) {
+        if(e.confirm){
+          that.quit();
+          wx.redirectTo({
+            url: '/page/index/index',
+          });
+        }
+      }
+    });
+  },
   qiang(){
     // 信道当前不可用
     if (!this.tunnel || !this.tunnel.isActive()) {

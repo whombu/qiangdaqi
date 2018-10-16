@@ -1,7 +1,7 @@
 @import "../common/index.wxss";
 ad {
     margin: 0 auto;
-    zoom: 80%;
+    zoom: 90%;
 }
 .page-wrap {
     display: flex;
